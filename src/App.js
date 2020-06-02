@@ -1,11 +1,26 @@
-import React from "react";
+import React, { useState } from "react";
 import MainList from "./components/MainList";
-import AddListButton from "./components/AddListButton";
+import AddFolder from "./components/AddFolder";
 
 //database colors import
 import database from "./assets/db.json";
 
 const App = () => {
+  const [lists, setLists] = useState(
+    database.lists.map((item) => {
+      item.color = database.colors.filter((color) => {
+        return color.id === item.colorId;
+      })[0].name;
+      return item;
+    })
+  );
+
+  const onAddFolder = (obj) => {
+    const newLists = [];
+    newLists.push(...lists, obj);
+    setLists(newLists);
+  };
+
   return (
     <div className="todo">
       <div className="todo__sidebar">
@@ -32,24 +47,11 @@ const App = () => {
           ]}
         />
         <MainList
-          items={[
-            {
-              color: "green",
-              name: "purchases",
-            },
-            {
-              color: "grey",
-              name: "Front-End",
-              active: true,
-            },
-            {
-              color: "blue",
-              name: "Films",
-            },
-          ]}
+          //Берем все цвета,фильтруем по id и 0 элемент это цвет(вытаскиваем name)
+          items={lists}
           isRemovable={true}
         />
-        <AddListButton colors={database.colors} />
+        <AddFolder colors={database.colors} onAddFolder={onAddFolder} />
       </div>
       <div className="todo__tasks"></div>
     </div>

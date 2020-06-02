@@ -6,7 +6,7 @@ import classNames from "classnames";
 import "./MainList.scss";
 const MainList = ({ items, isRemovable, onClick }) => {
   return (
-    //onClick from AddListButton
+    //onClick from AddFolder
     <ul className="todo__list" onClick={onClick}>
       {items.map((item, index) => {
         return (

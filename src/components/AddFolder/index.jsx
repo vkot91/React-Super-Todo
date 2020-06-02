@@ -1,16 +1,19 @@
 import React, { useState } from "react";
 import MainList from "../MainList";
+import Badge from "../Badge";
 import closeModal from "../../assets/img/close-popup.svg";
 /* Style */
-import "./AddListButton.scss";
-import Badge from "../Badge";
+import "./AddFolder.scss";
 
-const AddListButton = ({ colors }) => {
+const AddFolder = ({ colors, onAddFolder }) => {
   const [visibleModal, setVisibleModal] = useState(false);
   const [name, setName] = useState("New category");
 
   //Default first color
   const [selectedColor, setSelectedColor] = useState(colors[0].id);
+
+  //Save input value in state
+  const [inputValue, setInputValue] = useState("");
 
   /* change state of modal window */
   function change() {
@@ -21,6 +24,24 @@ const AddListButton = ({ colors }) => {
       setName("Close popup");
     }
   }
+  // Create new Folder
+  const createFolder = () => {
+    if (!inputValue) {
+      alert("Write category name");
+      return;
+    }
+    const color = colors.filter((item) => {
+      return item.id === selectedColor;
+    })[0].name;
+    console.log(color);
+    //Give our parametres to App.js
+    onAddFolder({
+      id: Math.floor(Math.random() * 1000),
+      name: inputValue,
+      color: color,
+    });
+  };
+
   return (
     <div className="add-list">
       <MainList
@@ -64,7 +85,13 @@ const AddListButton = ({ colors }) => {
             className="add-list-popup__close"
             onClick={() => change()}
           />
-          <input type="text" className="field" placeholder="Caregory name..." />
+          <input
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            type="text"
+            className="field"
+            placeholder="Caregory name..."
+          />
           <div className="add-list-popup__colors">
             {colors.map((item) => {
               return (
@@ -77,11 +104,13 @@ const AddListButton = ({ colors }) => {
               );
             })}
           </div>
-          <button className="button">Create</button>
+          <button className="button" onClick={createFolder}>
+            Create
+          </button>
         </div>
       )}
     </div>
   );
 };
 
-export default AddListButton;
+export default AddFolder;
