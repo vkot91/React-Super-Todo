@@ -1,28 +1,45 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import MainList from "../MainList";
 import Badge from "../Badge";
-import closeModal from "../../assets/img/close-popup.svg";
 /* Style */
 import "./AddFolder.scss";
 
+/*Icons*/
+import closeModal from "../../assets/img/close-popup.svg";
+import Axios from "axios";
+
 const AddFolder = ({ colors, onAddFolder }) => {
+  //Modal open
   const [visibleModal, setVisibleModal] = useState(false);
+
+  //Default name
   const [name, setName] = useState("New category");
 
   //Default first color
-  const [selectedColor, setSelectedColor] = useState(colors[0].id);
+  const [selectedColor, setSelectedColor] = useState(3);
 
   //Save input value in state
   const [inputValue, setInputValue] = useState("");
 
+  //loading state
+  const [isLoading, setIsLoading] = useState(false);
+  //useEffecr for check DOM loading array with colors and change them, use [0] as default
+  useEffect(() => {
+    if (Array.isArray(colors)) {
+      setSelectedColor(colors[0].id);
+    }
+  }, [colors]);
+
   /* change state of modal window */
-  function change() {
+  function changeModal() {
     setVisibleModal(!visibleModal);
     if (visibleModal === true) {
       setName("new category");
     } else if (visibleModal === false) {
       setName("Close popup");
     }
+    setSelectedColor(colors[0].id);
+    setInputValue("");
   }
   // Create new Folder
   const createFolder = () => {
@@ -30,22 +47,38 @@ const AddFolder = ({ colors, onAddFolder }) => {
       alert("Write category name");
       return;
     }
-    const color = colors.filter((item) => {
-      return item.id === selectedColor;
-    })[0].name;
-    console.log(color);
-    //Give our parametres to App.js
-    onAddFolder({
-      id: Math.floor(Math.random() * 1000),
-      name: inputValue,
-      color: color,
-    });
-  };
 
+    setIsLoading(true);
+    // Add item to server
+    Axios.post("http://localhost:3000/lists", {
+      name: inputValue,
+      colorId: selectedColor,
+    })
+      .then(({ data }) => {
+        //Возвращаем обьект цвета, и вытаскиевем name
+        const color = colors.filter((item) => {
+          return item.id === selectedColor;
+        })[0].name;
+        //Создаем новый обьект и добавляем цвет
+        const listObj = {
+          ...data,
+          color: {
+            name: color,
+          },
+        };
+        //Give our parametres to App.js
+        onAddFolder(listObj);
+      })
+      .finally(() => {
+        //Reset modal
+        changeModal();
+        setIsLoading(false);
+      });
+  };
   return (
     <div className="add-list">
       <MainList
-        onClick={() => change()}
+        onClick={changeModal}
         items={[
           {
             className: "add-list-button",
@@ -83,7 +116,7 @@ const AddFolder = ({ colors, onAddFolder }) => {
             src={closeModal}
             alt="Close Modal Window"
             className="add-list-popup__close"
-            onClick={() => change()}
+            onClick={changeModal}
           />
           <input
             value={inputValue}
@@ -105,7 +138,7 @@ const AddFolder = ({ colors, onAddFolder }) => {
             })}
           </div>
           <button className="button" onClick={createFolder}>
-            Create
+            {isLoading === false ? "Create" : "Loading..."}
           </button>
         </div>
       )}

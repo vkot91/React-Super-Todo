@@ -1,8 +1,8 @@
 import React from "react";
+import "./Badge.scss";
 
 import classNames from "classnames";
 
-import "./Badge.scss";
 const Badge = ({ color, onClick, className }) => {
   return (
     <i

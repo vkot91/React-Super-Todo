@@ -1,26 +1,46 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import MainList from "./components/MainList";
 import AddFolder from "./components/AddFolder";
+import Tasks from "./components/Tasks";
 
-//database colors import
-import database from "./assets/db.json";
+import axios from "axios";
 
 const App = () => {
-  const [lists, setLists] = useState(
-    database.lists.map((item) => {
-      item.color = database.colors.filter((color) => {
-        return color.id === item.colorId;
-      })[0].name;
-      return item;
-    })
-  );
+  // const [lists, setLists] = useState(
+  //   //Обработка JSON файла,цвет из colorId
+  //   database.lists.map((item) => {
+  //     item.color = database.colors.filter((color) => {
+  //       return color.id === item.colorId;
+  //     })[0].name;
+  //     return item;
+  //   })
+  // );
+  const [lists, setLists] = useState(null);
+  const [colors, setColors] = useState(null);
+  //Следит за тем что бы выполнилось только тогда когда компонент загрузился
+  useEffect(() => {
+    axios.get("http://localhost:3000/lists?_expand=color").then(({ data }) => {
+      setLists(data);
+    });
+    axios.get("http://localhost:3000/colors").then(({ data }) => {
+      setColors(data);
+    });
+  }, []);
 
+  //Create new folder
   const onAddFolder = (obj) => {
     const newLists = [];
     newLists.push(...lists, obj);
     setLists(newLists);
   };
 
+  //Remove folder
+  const onRemove = (id) => {
+    const newLists = lists.filter((item) => {
+      return item.id !== id;
+    });
+    setLists(newLists);
+  };
   return (
     <div className="todo">
       <div className="todo__sidebar">
@@ -42,18 +62,23 @@ const App = () => {
                 </svg>
               ),
               name: "all categories",
-              active: true,
+              active: false,
             },
           ]}
         />
-        <MainList
-          //Берем все цвета,фильтруем по id и 0 элемент это цвет(вытаскиваем name)
-          items={lists}
-          isRemovable={true}
-        />
-        <AddFolder colors={database.colors} onAddFolder={onAddFolder} />
+        {lists && (
+          <MainList
+            //Берем все цвета,фильтруем по id и 0 элемент это цвет(вытаскиваем name)
+            items={lists}
+            isRemovable={true}
+            onRemove={onRemove}
+          />
+        )}
+        <AddFolder colors={colors} onAddFolder={onAddFolder} />
       </div>
-      <div className="todo__tasks"></div>
+      <div className="todo__tasks">
+        <Tasks />
+      </div>
     </div>
   );
 };
