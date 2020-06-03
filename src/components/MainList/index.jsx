@@ -9,7 +9,14 @@ import "./MainList.scss";
 import removeSvg from "../../assets/img/delete.svg";
 import Axios from "axios";
 
-const MainList = ({ items, isRemovable, onClick, onRemove }) => {
+const MainList = ({
+  items,
+  isRemovable,
+  onClick,
+  onRemove,
+  onActiveItem,
+  itemActive,
+}) => {
   //Check delete
   const removeList = (item) => {
     if (window.confirm("You really want to delete this folder?")) {
@@ -19,7 +26,6 @@ const MainList = ({ items, isRemovable, onClick, onRemove }) => {
       });
     }
   };
-
   return (
     //onClick from AddFolder
     <ul className="list" onClick={onClick}>
@@ -27,11 +33,19 @@ const MainList = ({ items, isRemovable, onClick, onRemove }) => {
         return (
           <li
             key={index}
-            //If item has property active(item.active) class = active or class from App.js
-            className={classNames(item.className, { active: item.active })}
+            //Check for main List and add Folder
+            onClick={onActiveItem ? () => onActiveItem(item) : null}
+            //If item has property active from state(itemActive) class = active or class from App.js
+            className={classNames(item.className, {
+              //Check for null && - necessarily
+              active: itemActive && itemActive.id === item.id,
+            })}
           >
             <i>{item.icon ? item.icon : <Badge color={item.color.name} />}</i>
-            <span>{item.name}</span>
+            <span>
+              {item.name}
+              {item.tasks && ` (${item.tasks.length})`}
+            </span>
             {isRemovable && (
               <img
                 src={removeSvg}

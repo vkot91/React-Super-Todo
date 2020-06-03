@@ -17,27 +17,59 @@ const App = () => {
   // );
   const [lists, setLists] = useState(null);
   const [colors, setColors] = useState(null);
+  const [itemActive, setItemActive] = useState(null);
+
   //Следит за тем что бы выполнилось только тогда когда компонент загрузился
   useEffect(() => {
-    axios.get("http://localhost:3000/lists?_expand=color").then(({ data }) => {
-      setLists(data);
-    });
+    axios
+      .get("http://localhost:3000/lists?_expand=color&_embed=tasks")
+      .then(({ data }) => {
+        setLists(data);
+      });
     axios.get("http://localhost:3000/colors").then(({ data }) => {
       setColors(data);
     });
   }, []);
 
-  //Create new folder
+  //Create new folder in state
   const onAddFolder = (obj) => {
     const newLists = [];
     newLists.push(...lists, obj);
     setLists(newLists);
   };
 
-  //Remove folder
+  //Create new task in state
+  const onAddTask = (taskObj) => {
+    const newList = lists.map((item) => {
+      if (item.id === taskObj.listId) {
+        item.tasks = [...item.tasks, taskObj];
+      }
+      return item;
+    });
+    setLists(newList);
+  };
+
+  //Remove folder from state
   const onRemove = (id) => {
     const newLists = lists.filter((item) => {
       return item.id !== id;
+    });
+    setLists(newLists);
+  };
+
+  //Set active attribute to item;
+  const onActiveItem = (item) => {
+    //State
+    setItemActive(item);
+  };
+
+  const onEditTitle = (id, title) => {
+    //Change name in state
+    const newLists = lists.map((item) => {
+      if (item.id === id) {
+        item.name = title;
+      }
+      return item;
     });
     setLists(newLists);
   };
@@ -45,6 +77,7 @@ const App = () => {
     <div className="todo">
       <div className="todo__sidebar">
         <MainList
+          onActiveItem={onActiveItem}
           items={[
             {
               icon: (
@@ -68,16 +101,24 @@ const App = () => {
         />
         {lists && (
           <MainList
-            //Берем все цвета,фильтруем по id и 0 элемент это цвет(вытаскиваем name)
             items={lists}
             isRemovable={true}
             onRemove={onRemove}
+            onActiveItem={onActiveItem}
+            //State
+            itemActive={itemActive}
           />
         )}
         <AddFolder colors={colors} onAddFolder={onAddFolder} />
       </div>
       <div className="todo__tasks">
-        <Tasks />
+        {lists && itemActive && (
+          <Tasks
+            list={itemActive}
+            onAddTask={onAddTask}
+            onEditTitle={onEditTitle}
+          />
+        )}
       </div>
     </div>
   );
