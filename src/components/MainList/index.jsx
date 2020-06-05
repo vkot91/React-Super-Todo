@@ -8,21 +8,21 @@ import "./MainList.scss";
 /*Icons*/
 import removeSvg from "../../assets/img/delete.svg";
 import Axios from "axios";
-
 const MainList = ({
   items,
   isRemovable,
   onClick,
-  onRemove,
+  onRemoveFolder,
   onActiveItem,
   itemActive,
 }) => {
   //Check delete
   const removeList = (item) => {
+    console.log(item);
     if (window.confirm("You really want to delete this folder?")) {
       //Delete item from backend
       Axios.delete("http://localhost:3000/lists/" + item.id).then(() => {
-        onRemove(item.id);
+        onRemoveFolder(item.id);
       });
     }
   };
@@ -38,7 +38,10 @@ const MainList = ({
             //If item has property active from state(itemActive) class = active or class from App.js
             className={classNames(item.className, {
               //Check for null && - necessarily
-              active: itemActive && itemActive.id === item.id,
+              //item.active - MAIN ITEM!!
+              active: item.active
+                ? item.active
+                : itemActive && itemActive.id === item.id,
             })}
           >
             <i>{item.icon ? item.icon : <Badge color={item.color.name} />}</i>

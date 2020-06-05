@@ -2,7 +2,7 @@
   "lists": [
     {
       "id": 1,
-      "name": "Продажи",
+      "name": "Prodzy",
       "colorId": 5
     },
     {
@@ -11,99 +11,38 @@
       "colorId": 4
     },
     {
-      "id": 3,
-      "name": "Фильмы и сериалы",
-      "colorId": 3
-    },
-    {
-      "id": 4,
-      "name": "Книги",
-      "colorId": 2
-    },
-    {
-      "name": "First",
+      "name": "Films",
       "colorId": 4,
+      "id": 4
+    },
+    {
+      "name": "Books",
+      "colorId": 8,
       "id": 5
+    },
+    {
+      "name": "Purchases",
+      "colorId": 6,
+      "id": 6
+    },
+    {
+      "name": "Lessons",
+      "colorId": 1,
+      "id": 7
     }
   ],
   "tasks": [
     {
-      "id": 1,
       "listId": 2,
-      "text": "Изучить JavaScript",
-      "completed": false
-    },
-    {
-      "id": 2,
-      "listId": 2,
-      "text": "Изучить паттерны проектирования",
-      "completed": false
-    },
-    {
-      "id": 3,
-      "listId": 2,
-      "text": "ReactJS Hooks (useState, useReducer, useEffect и т.д.)",
-      "completed": true
-    },
-    {
-      "listId": 2,
-      "text": "Front",
-      "completed": false,
-      "id": 4
+      "text": "Kurwa",
+      "completed": true,
+      "id": 1
     },
     {
       "listId": 1,
-      "text": "123",
-      "completed": false,
-      "id": 5
-    },
-    {
-      "listId": 1,
-      "text": "234",
-      "completed": false,
-      "id": 6
-    },
-    {
-      "listId": 1,
-      "text": "657",
-      "completed": false,
-      "id": 7
-    },
-    {
-      "listId": 1,
-      "text": "123",
-      "completed": false,
-      "id": 8
-    },
-    {
-      "listId": 2,
-      "text": "End",
-      "completed": false,
-      "id": 9
-    },
-    {
-      "listId": 3,
-      "text": "qwwe",
-      "completed": false,
-      "id": 10
-    },
-    {
-      "listId": 3,
-      "text": "qweqw",
-      "completed": false,
-      "id": 11
-    },
-    {
-      "listId": 1,
-      "text": "Hello world!",
-      "completed": false,
-      "id": 12
-    },
-    {
-      "listId": 1,
-      "text": "Bitches",
-      "completed": false,
-      "id": 13
+      "text": "Hello bitch",
+      "completed": true,
+      "id": 2
     }
   ],
   "colors": [

@@ -5,6 +5,9 @@ import Tasks from "./components/Tasks";
 
 import axios from "axios";
 
+//Router
+import { Route, useHistory } from "react-router-dom";
+
 const App = () => {
   // const [lists, setLists] = useState(
   //   //Обработка JSON файла,цвет из colorId
@@ -18,7 +21,7 @@ const App = () => {
   const [lists, setLists] = useState(null);
   const [colors, setColors] = useState(null);
   const [itemActive, setItemActive] = useState(null);
-
+  let history = useHistory();
   //Следит за тем что бы выполнилось только тогда когда компонент загрузился
   useEffect(() => {
     axios
@@ -33,9 +36,8 @@ const App = () => {
 
   //Create new folder in state
   const onAddFolder = (obj) => {
-    const newLists = [];
-    newLists.push(...lists, obj);
-    setLists(newLists);
+    const newList = [...lists, obj];
+    setLists(newList);
   };
 
   //Create new task in state
@@ -50,18 +52,30 @@ const App = () => {
   };
 
   //Remove folder from state
-  const onRemove = (id) => {
+  const onRemoveFolder = (id) => {
     const newLists = lists.filter((item) => {
       return item.id !== id;
     });
     setLists(newLists);
+    //Push for redirect
+    history.push("/");
   };
 
   //Set active attribute to item;
   const onActiveItem = (item) => {
-    //State
+    //Router method to create path
+    history.push(`/lists/${item.id}`);
     setItemActive(item);
   };
+
+  /*UseEffect  работает при каждой перезагрузке страницы*/
+  useEffect(() => {
+    const listId = history.location.pathname.split("lists/")[1];
+    if (lists) {
+      const list = lists.find((item) => item.id === Number(listId));
+      setItemActive(list);
+    }
+  }, [lists, history.location.pathname]);
 
   const onEditTitle = (id, title) => {
     //Change name in state
@@ -73,13 +87,94 @@ const App = () => {
     });
     setLists(newLists);
   };
+
+  /* WORK WITH TASKS */
+
+  //Edit task text
+  const onEditTask = (listId, taskObj) => {
+    console.log(listId, taskObj);
+    const newTaskText = window.prompt("New task:", taskObj.text);
+    if (newTaskText.length === 0) {
+      alert("Write some text please!");
+      return;
+    }
+    const newList = lists.map((item) => {
+      if (item.id === listId) {
+        item.tasks = item.tasks.map((task) => {
+          if (task.id === taskObj.id) {
+            task.text = newTaskText;
+          }
+          return task;
+        });
+      }
+      return item;
+    });
+    setLists(newList);
+    //Change name in JSON-server.Method:patch
+    axios
+      .patch(`http://localhost:3000/tasks/${taskObj.id}`, {
+        text: newTaskText,
+      })
+      .catch(() => {
+        alert("Error");
+      });
+  };
+
+  //Check task
+  const onCompleteTask = (listId, taskId, completed) => {
+    const newList = lists.map((item) => {
+      if (item.id === listId) {
+        item.tasks = item.tasks.map((task) => {
+          if (task.id === taskId) {
+            task.completed = completed;
+          }
+          return task;
+        });
+      }
+      return item;
+    });
+    setLists(newList);
+
+    axios
+      .patch(`http://localhost:3000/tasks/${taskId}`, {
+        completed: completed,
+      })
+      .catch(() => {
+        alert("Error");
+      });
+  };
+
+  //Delete task
+  const onRemoveTask = (listId, taskId) => {
+    if (window.confirm("You really wany to delete task?")) {
+      const newList = lists.map((item) => {
+        if (item.id === listId) {
+          item.tasks = item.tasks.filter((task) => task.id !== taskId);
+          alert("Your item was succesfully deleted!");
+        }
+
+        return item;
+      });
+      setLists(newList);
+      //Change name in JSON-server.Method:patch
+      axios.delete(`http://localhost:3000/tasks/${taskId}`).catch(() => {
+        alert("Error");
+      });
+    }
+  };
+
   return (
     <div className="todo">
       <div className="todo__sidebar">
         <MainList
-          onActiveItem={onActiveItem}
+          //Routing to main page
+          onActiveItem={(list) => {
+            history.push(`/`);
+            setItemActive(list);
+          }}
           items={[
             {
+              active: history.location.pathname === "/",
               icon: (
                 <svg
                   width="14"
@@ -95,30 +190,53 @@ const App = () => {
                 </svg>
               ),
               name: "all categories",
-              active: false,
             },
           ]}
         />
         {lists && (
           <MainList
             items={lists}
-            isRemovable={true}
-            onRemove={onRemove}
+            onRemoveFolder={onRemoveFolder}
             onActiveItem={onActiveItem}
             //State
             itemActive={itemActive}
+            isRemovable={true}
           />
         )}
         <AddFolder colors={colors} onAddFolder={onAddFolder} />
       </div>
       <div className="todo__tasks">
-        {lists && itemActive && (
-          <Tasks
-            list={itemActive}
-            onAddTask={onAddTask}
-            onEditTitle={onEditTitle}
-          />
-        )}
+        {/*"Main page"*/}
+        <Route exact path="/">
+          {lists &&
+            lists.map((item) => {
+              return (
+                <Tasks
+                  key={item.id}
+                  list={item}
+                  onAddTask={onAddTask}
+                  onEditTitle={onEditTitle}
+                  onEditTask={onEditTask}
+                  onCompleteTask={onCompleteTask}
+                  onRemoveTask={onRemoveTask}
+                  withoutEmpty
+                />
+              );
+            })}
+        </Route>
+        {/*TASKS COMPONENT*/}
+        <Route path="/lists/:id">
+          {lists && itemActive && (
+            <Tasks
+              list={itemActive}
+              onAddTask={onAddTask}
+              onEditTitle={onEditTitle}
+              onEditTask={onEditTask}
+              onCompleteTask={onCompleteTask}
+              onRemoveTask={onRemoveTask}
+            />
+          )}
+        </Route>
       </div>
     </div>
   );

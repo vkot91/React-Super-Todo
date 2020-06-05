@@ -58,13 +58,13 @@ const AddFolder = ({ colors, onAddFolder }) => {
         //Возвращаем обьект цвета, и вытаскиевем name
         const color = colors.filter((item) => {
           return item.id === selectedColor;
-        })[0].name;
+        })[0];
         //Создаем новый обьект и добавляем цвет
         const listObj = {
           ...data,
-          color: {
-            name: color,
-          },
+          color,
+          //Item dont have tasks by default
+          tasks: [],
         };
         //Give our parametres to App.js
         onAddFolder(listObj);
@@ -132,7 +132,7 @@ const AddFolder = ({ colors, onAddFolder }) => {
                   onClick={() => setSelectedColor(item.id)}
                   color={item.name}
                   key={item.id}
-                  className={selectedColor === item.id ? "active" : ""}
+                  className={selectedColor === item.id && "active"}
                 />
               );
             })}

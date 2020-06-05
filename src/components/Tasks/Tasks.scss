@@ -1,89 +1,83 @@
 .tasks {
+  &:not(:last-of-type) {
+    margin-bottom: 40px;
+  }
+
+  a {
+    text-decoration: none;
+  }
+
   &__title {
-    font-family: "Montserrat", sans-serif;
-    font-style: normal;
+    font-family: Montserrat;
     font-weight: bold;
     font-size: 32px;
     line-height: 39px;
     color: #64c4ed;
     padding-bottom: 20px;
     border-bottom: 1px solid #f2f2f2;
+
     &:hover {
       img {
-        opacity: 0.4;
+        opacity: 0.2;
       }
     }
+
     img {
-      cursor: pointer;
       opacity: 0;
-      margin-left: 10px;
+      cursor: pointer;
+      margin-left: 15px;
+
       &:hover {
         opacity: 0.8;
       }
     }
   }
-  &__items {
-    margin-top: 30px;
-    h2 {
-      text-align: center;
-      font-family: Montserrat;
-      font-style: normal;
-      font-weight: bold;
-      font-size: 32px;
 
-      color: #c9d1d3;
+  &__form {
+    margin-top: 20px;
+
+    &-block {
+      .button {
+        margin-right: 10px;
+        margin-top: 15px;
+      }
     }
-    &-raw {
+
+    &-new {
       display: flex;
       align-items: center;
-      margin-bottom: 15px;
-      input {
-        border: none;
-        width: 100%;
+      cursor: pointer;
+      opacity: 0.4;
+      transition: opacity 0.15s ease-in-out;
 
+      &:hover {
+        opacity: 0.8;
+      }
+
+      img {
+        width: 16px;
+        height: 16px;
+        margin-left: 4px;
+      }
+
+      span {
         font-size: 16px;
-        margin-left: 15px;
+        margin-left: 19px;
       }
-      .checkbox {
-        input {
-          display: none;
-        }
-        &:hover {
-          label {
-            background: #f2f2f2;
-            border-color: #f2f2f2;
-            svg {
-              opacity: 1;
-              path {
-                stroke: #b2b2b2;
-              }
-            }
-          }
-        }
-        label {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          cursor: pointer;
-          width: 20px;
-          height: 20px;
-          border-radius: 30px;
-          border: 2px solid #e8e8e8;
-          svg {
-            opacity: 0;
-          }
-        }
-        input:checked + label {
-          background: #4dd599;
-          border-color: #4dd599;
-          svg {
-            opacity: 1;
-            path {
-              stroke: #fff;
-            }
-          }
-        }
-      }
+    }
+  }
+
+  &__items {
+    margin-top: 30px;
+
+    h2 {
+      font-family: Montserrat;
+      font-weight: bold;
+      font-size: 22px;
+      color: #c9d1d3;
+      position: absolute;
+      left: 50%;
+      top: 50%;
     }
   }
 }

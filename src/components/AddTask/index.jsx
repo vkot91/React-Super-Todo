@@ -3,8 +3,8 @@ import addTaskSvg from "../../assets/img/add_task.svg";
 import "./AddTask.scss";
 import Axios from "axios";
 
-const AddTask = ({ list, onAddTask }) => {
-  const [activeForm, setActiveForm] = useState(true);
+const AddTask = ({ list, onAddTask, withoutEmpty }) => {
+  const [activeForm, setActiveForm] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -27,7 +27,7 @@ const AddTask = ({ list, onAddTask }) => {
   };
   return (
     <Fragment>
-      {activeForm === false && (
+      {activeForm === false && !withoutEmpty && (
         <div className="tasks__form-new" onClick={() => setActiveForm(true)}>
           <img src={addTaskSvg} alt="Create Task Icon" />
           <span>New task</span>
