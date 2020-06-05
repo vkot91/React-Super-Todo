@@ -1,6 +1,7 @@
-# react-todoList
+# react-toDo
 
 Simple (SPA) ToDo application on React.js.
+
 **Stack:**
 
 - ReactJS (useState, useReducer, useEffect)
