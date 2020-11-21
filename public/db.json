@@ -19,16 +19,6 @@
       "name": "Purchases",
       "colorId": 6,
       "id": 6
-    },
-    {
-      "name": "Work",
-      "colorId": 8,
-      "id": 7
-    },
-    {
-      "name": "New Category",
-      "colorId": 1,
-      "id": 8
     }
   ],
   "tasks": [
@@ -41,19 +31,19 @@
     {
       "listId": 2,
       "text": "Learn ReactJs",
-      "completed": false,
+      "completed": true,
       "id": 2
     },
     {
       "listId": 4,
       "text": "Breaking Bad",
-      "completed": true,
+      "completed": false,
       "id": 3
     },
     {
       "listId": 5,
       "text": "Harry Potter",
-      "completed": true,
+      "completed": false,
       "id": 4
     },
     {
@@ -65,14 +55,8 @@
     {
       "listId": 6,
       "text": "Iphone",
-      "completed": false,
+      "completed": true,
       "id": 6
-    },
-    {
-      "listId": 7,
-      "text": "Create new game",
-      "completed": false,
-      "id": 7
     }
   ],
   "colors": [
