@@ -24,12 +24,10 @@ const App = () => {
   let history = useHistory();
   //Следит за тем что бы выполнилось только тогда когда компонент загрузился
   useEffect(() => {
-    axios
-      .get("http://localhost:3000/lists?_expand=color&_embed=tasks")
-      .then(({ data }) => {
-        setLists(data);
-      });
-    axios.get("http://localhost:3000/colors").then(({ data }) => {
+    axios.get("/lists?_expand=color&_embed=tasks").then(({ data }) => {
+      setLists(data);
+    });
+    axios.get("/colors").then(({ data }) => {
       setColors(data);
     });
   }, []);
@@ -112,7 +110,7 @@ const App = () => {
     setLists(newList);
     //Change name in JSON-server.Method:patch
     axios
-      .patch(`http://localhost:3000/tasks/${taskObj.id}`, {
+      .patch(`/tasks/${taskObj.id}`, {
         text: newTaskText,
       })
       .catch(() => {
@@ -136,7 +134,7 @@ const App = () => {
     setLists(newList);
 
     axios
-      .patch(`http://localhost:3000/tasks/${taskId}`, {
+      .patch(`/tasks/${taskId}`, {
         completed: completed,
       })
       .catch(() => {
@@ -157,7 +155,7 @@ const App = () => {
       });
       setLists(newList);
       //Change name in JSON-server.Method:patch
-      axios.delete(`http://localhost:3000/tasks/${taskId}`).catch(() => {
+      axios.delete(`/tasks/${taskId}`).catch(() => {
         alert("Error");
       });
     }

@@ -22,7 +22,7 @@ const Tasks = ({
     if (newTitle) {
       onEditTitle(list.id, newTitle);
       //Change name in JSON-server.Method:patch
-      Axios.patch(`http://localhost:3000/lists/${list.id}`, {
+      Axios.patch(`/lists/${list.id}`, {
         name: newTitle,
       }).catch(() => {
         alert("Error");

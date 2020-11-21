@@ -10,7 +10,7 @@ const AddTask = ({ list, onAddTask, withoutEmpty }) => {
 
   const createTask = () => {
     setIsLoading(true);
-    Axios.post("http://localhost:3000/tasks", {
+    Axios.post("/tasks", {
       listId: list.id,
       text: inputValue,
       completed: false,

@@ -21,7 +21,7 @@ const MainList = ({
     console.log(item);
     if (window.confirm("You really want to delete this folder?")) {
       //Delete item from backend
-      Axios.delete("http://localhost:3000/lists/" + item.id).then(() => {
+      Axios.delete("/lists/" + item.id).then(() => {
         onRemoveFolder(item.id);
       });
     }

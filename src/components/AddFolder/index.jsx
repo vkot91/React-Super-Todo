@@ -50,7 +50,7 @@ const AddFolder = ({ colors, onAddFolder }) => {
 
     setIsLoading(true);
     // Add item to server
-    Axios.post("http://localhost:3000/lists", {
+    Axios.post("/lists", {
       name: inputValue,
       colorId: selectedColor,
     })
